@@ -10,6 +10,7 @@ import androidx.room.Update;
 import com.zybooks.bdavis_wguscheduler.entities.Course;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Dao
 public interface CourseDAO {
@@ -24,9 +25,9 @@ public interface CourseDAO {
     void deleteCourse(Course course);
 
     @Query("SELECT * FROM courses ORDER BY courseId ASC")
-    ArrayList<Course> getAllCourses();
+    List<Course> getAllCourses();
 
     @Query("SELECT * FROM courses WHERE termId =:term ORDER BY courseId ASC")
-    ArrayList<Course> getAssociatedCourses(int term);
+    List<Course> getAssociatedCourses(int term);
 
 }

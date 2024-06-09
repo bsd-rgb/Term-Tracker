@@ -10,6 +10,7 @@ import androidx.room.Update;
 import com.zybooks.bdavis_wguscheduler.entities.Assessment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Dao
 public interface AssessmentDAO {
@@ -24,8 +25,8 @@ public interface AssessmentDAO {
     void deleteAssessment(Assessment assessment);
 
     @Query("SELECT * FROM assessments ORDER BY assessmentId ASC")
-    ArrayList<Assessment> getAllAssessments();
+    List<Assessment> getAllAssessments();
 
     @Query("SELECT * FROM assessments WHERE courseId=:course ORDER BY assessmentId ASC")
-    ArrayList<Assessment> getAssociatedAssessments(int course);
+    List<Assessment> getAssociatedAssessments(int course);
 }

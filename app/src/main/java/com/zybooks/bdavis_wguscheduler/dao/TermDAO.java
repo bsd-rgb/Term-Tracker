@@ -5,13 +5,17 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.TypeConverters;
 import androidx.room.Update;
 
+import com.zybooks.bdavis_wguscheduler.database.Converters;
 import com.zybooks.bdavis_wguscheduler.entities.Term;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Dao
+@TypeConverters({Converters.class})
 public interface TermDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -24,7 +28,7 @@ public interface TermDAO {
     void deleteTerm(Term term);
 
     @Query("SELECT * FROM terms ORDER BY termId ASC")
-    ArrayList<Term> getAllTerms();
+    List<Term> getAllTerms();
 
 
 }
