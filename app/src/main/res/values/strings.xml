@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">BDavis_WGUScheduler</string>
+    <string name="term_button">Terms</string>
+    <string name="course_button">Courses</string>
+    <string name="assessment_button">Assessments</string>
+</resources>
