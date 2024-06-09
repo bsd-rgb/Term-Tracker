@@ -13,20 +13,35 @@
         android:theme="@style/Theme.BDavis_WGUScheduler"
         tools:targetApi="31">
         <activity
-            android:name=".UI.AssessmentDetails"
+            android:name=".UI.AssessmentNew"
+            android:label="New Assessment"
             android:parentActivityName=".UI.AssessmentList"
-            android:label="Assessment Details"
             android:exported="false" />
+        <activity
+            android:name=".UI.CourseNew"
+            android:label="New Couse"
+            android:parentActivityName=".UI.CourseList"
+            android:exported="false" />
+        <activity
+            android:name=".UI.TermNew"
+            android:label="New Term"
+            android:parentActivityName=".UI.TermList"
+            android:exported="false" />
+        <activity
+            android:name=".UI.AssessmentDetails"
+            android:exported="false"
+            android:label="Assessment Details"
+            android:parentActivityName=".UI.AssessmentList" />
         <activity
             android:name=".UI.CourseDetails"
-            android:parentActivityName=".UI.CourseList"
+            android:exported="false"
             android:label="Course Details"
-            android:exported="false" />
+            android:parentActivityName=".UI.CourseList" />
         <activity
             android:name=".UI.TermDetails"
-            android:parentActivityName=".UI.TermList"
+            android:exported="false"
             android:label="Term Details"
-            android:exported="false" />
+            android:parentActivityName=".UI.TermList" />
         <activity
             android:name=".UI.AssessmentList"
             android:exported="false"

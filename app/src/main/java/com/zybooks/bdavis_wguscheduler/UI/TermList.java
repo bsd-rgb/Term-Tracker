@@ -31,7 +31,7 @@ public class TermList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(TermList.this, TermDetails.class);
+                Intent intent = new Intent(TermList.this, TermNew.class);
                 startActivity(intent);
 
             }
