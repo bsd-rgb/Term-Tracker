@@ -3,6 +3,7 @@ package com.zybooks.bdavis_wguscheduler.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity(tableName = "assessments")
@@ -13,10 +14,10 @@ public class Assessment {
 
     private String assessmentName;
     private String assessmentType;
-    private Date endDate;
+    private LocalDate endDate;
     private int courseId;
 
-    public Assessment(int assessmentId, String assessmentName, String assessmentType, Date endDate, int courseId) {
+    public Assessment(int assessmentId, String assessmentName, String assessmentType, LocalDate endDate, int courseId) {
         this.assessmentId = assessmentId;
         this.assessmentName = assessmentName;
         this.assessmentType = assessmentType;
@@ -48,11 +49,11 @@ public class Assessment {
         this.assessmentType = assessmentType;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

@@ -2,8 +2,11 @@ package com.zybooks.bdavis_wguscheduler.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +15,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.zybooks.bdavis_wguscheduler.R;
+import com.zybooks.bdavis_wguscheduler.entities.Term;
+
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class HomeScreen extends AppCompatActivity {
 
@@ -57,5 +64,22 @@ public class HomeScreen extends AppCompatActivity {
             return insets;
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_homescreen, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){
+        if(menuItem.getItemId() == R.id.sample){
+            Toast.makeText(HomeScreen.this, "Sample data to be added", Toast.LENGTH_LONG).show();
+            Term term = new Term(0, "Term 1", LocalDate.of(2024, 01, 02), LocalDate.of(2024, 06, 30));
+            return true;
+
+        }
+        return true;
     }
 }

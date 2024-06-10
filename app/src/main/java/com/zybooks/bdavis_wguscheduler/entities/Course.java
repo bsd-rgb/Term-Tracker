@@ -3,6 +3,7 @@ package com.zybooks.bdavis_wguscheduler.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity(tableName = "courses")
@@ -12,14 +13,14 @@ public class Course {
     private int courseId;
     private String courseName;
     private String status;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private int termId;
     private String instructorName;
     private String instructorEmail;
     private String instructorPhone;
 
-    public Course(int courseId, String courseName, String status, Date startDate, Date endDate, int termId, String instructorName, String instructorEmail, String instructorPhone) {
+    public Course(int courseId, String courseName, String status, LocalDate startDate, LocalDate endDate, int termId, String instructorName, String instructorEmail, String instructorPhone) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.status = status;
@@ -55,19 +56,19 @@ public class Course {
         this.status = status;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
