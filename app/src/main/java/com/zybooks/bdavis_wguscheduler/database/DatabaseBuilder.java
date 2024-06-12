@@ -14,7 +14,7 @@ import com.zybooks.bdavis_wguscheduler.entities.Assessment;
 import com.zybooks.bdavis_wguscheduler.entities.Course;
 import com.zybooks.bdavis_wguscheduler.entities.Term;
 
-@Database(entities = {Term.class, Course.class, Assessment.class}, version=0, exportSchema = false)
+@Database(entities = {Term.class, Course.class, Assessment.class}, version=1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class DatabaseBuilder extends RoomDatabase {
 
@@ -22,13 +22,14 @@ public abstract class DatabaseBuilder extends RoomDatabase {
     public abstract CourseDAO courseDAO();
     public abstract AssessmentDAO assessmentDAO();
 
-    public static volatile DatabaseBuilder INSTANCE;
+
+    private static volatile DatabaseBuilder INSTANCE;
 
     static DatabaseBuilder getDatabase(final Context context){
         if(INSTANCE == null){
             synchronized (DatabaseBuilder.class){
                 if(INSTANCE == null){
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), DatabaseBuilder.class,"SchedulerDatabase.db")
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), DatabaseBuilder.class,"Scheduler.db")
                             .fallbackToDestructiveMigration()
                             .build();
                 }
