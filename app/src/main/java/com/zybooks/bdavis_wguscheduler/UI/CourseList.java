@@ -9,11 +9,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zybooks.bdavis_wguscheduler.R;
+import com.zybooks.bdavis_wguscheduler.database.Repository;
+import com.zybooks.bdavis_wguscheduler.entities.Course;
+
+import java.util.List;
 
 public class CourseList extends AppCompatActivity {
+
+    private Repository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,5 +42,13 @@ public class CourseList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        RecyclerView recyclerView = findViewById(R.id.courseListRecyclerview);
+        repository = new Repository(getApplication());
+        List<Course> allCourses = repository.getmAllCourses();
+        final CourseAdapter courseAdapter = new CourseAdapter(this);
+        recyclerView.setAdapter(courseAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        courseAdapter.setCourses(allCourses);
     }
 }
