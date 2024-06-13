@@ -9,11 +9,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zybooks.bdavis_wguscheduler.R;
+import com.zybooks.bdavis_wguscheduler.database.Repository;
+import com.zybooks.bdavis_wguscheduler.entities.Assessment;
+
+import java.util.List;
 
 public class AssessmentList extends AppCompatActivity {
+
+    Repository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,5 +42,12 @@ public class AssessmentList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        RecyclerView recyclerView = findViewById(R.id.assessmentListReyclerview);
+        repository = new Repository(getApplication());
+        List<Assessment> allAssessments = repository.getmAllAssessments();
+        final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
+        recyclerView.setAdapter(assessmentAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        assessmentAdapter.setAssessments(allAssessments);
     }
 }
