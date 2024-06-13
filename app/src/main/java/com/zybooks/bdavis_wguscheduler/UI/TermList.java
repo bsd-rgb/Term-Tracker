@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -47,6 +48,9 @@ public class TermList extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.termListReyclerview);
         repository = new Repository(getApplication());
         List<Term> allTerms = repository.getmAllTerms();
-        //final TermAdapter termAdapter = new TermAdapter(this);
+        final TermAdapter termAdapter = new TermAdapter(this);
+        recyclerView.setAdapter(termAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        termAdapter.setTerms(allTerms);
     }
 }

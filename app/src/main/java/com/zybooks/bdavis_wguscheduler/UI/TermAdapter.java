@@ -43,7 +43,10 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
                     final Term current = mTerms.get(position);
                     Intent intent = new Intent(context, TermDetails.class);
                     intent.putExtra("id", current.getTermId());
-                    //ID, name, start date, end date
+                    intent.putExtra("name", current.getTermName());
+                    intent.putExtra("start date", current.getStartDate());
+                    intent.putExtra("end date", current.getEndDate());
+                    context.startActivity(intent);
 
                 }
             });
@@ -53,11 +56,20 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
     @NonNull
     @Override
     public TermAdapter.TermViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View itemView = mInflater.inflate(R.layout.term_list_item, parent, false);
+        return new TermViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TermAdapter.TermViewHolder holder, int position) {
+
+        if(mTerms != null){
+            Term current = mTerms.get(position);
+            String name = current.getTermName();
+            holder.termItemViewer.setText(name);
+        }else{
+            holder.termItemViewer.setText("No term name.");
+        }
 
     }
 
