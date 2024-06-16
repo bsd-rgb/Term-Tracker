@@ -14,7 +14,7 @@ import com.zybooks.bdavis_wguscheduler.entities.Assessment;
 import com.zybooks.bdavis_wguscheduler.entities.Course;
 import com.zybooks.bdavis_wguscheduler.entities.Term;
 
-@Database(entities = {Term.class, Course.class, Assessment.class}, version=2, exportSchema = false)
+@Database(entities = {Term.class, Course.class, Assessment.class}, version=3, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class DatabaseBuilder extends RoomDatabase {
 

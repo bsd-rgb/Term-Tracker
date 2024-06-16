@@ -13,14 +13,14 @@ public class Course {
     private int courseId;
     private String courseName;
     private String status;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Date startDate;
+    private Date endDate;
     private int termId;
     private String instructorName;
     private String instructorEmail;
     private String instructorPhone;
 
-    public Course(int courseId, String courseName, String status, LocalDate startDate, LocalDate endDate, int termId, String instructorName, String instructorEmail, String instructorPhone) {
+    public Course(int courseId, String courseName, String status, Date startDate, Date endDate, int termId, String instructorName, String instructorEmail, String instructorPhone) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.status = status;
@@ -56,19 +56,19 @@ public class Course {
         this.status = status;
     }
 
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 

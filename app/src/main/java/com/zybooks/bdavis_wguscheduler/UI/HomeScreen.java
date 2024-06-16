@@ -20,6 +20,7 @@ import com.zybooks.bdavis_wguscheduler.entities.Course;
 import com.zybooks.bdavis_wguscheduler.entities.Term;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class HomeScreen extends AppCompatActivity {
 
@@ -80,14 +81,14 @@ public class HomeScreen extends AppCompatActivity {
         if (menuItem.getItemId() == R.id.sample) {
             repository = new Repository(getApplication());
             //Toast.makeText(HomeScreen.this, "Sample data to be added", Toast.LENGTH_LONG).show();
-            Term term = new Term(0, "Term 1", LocalDate.of(2024, 01, 02), LocalDate.of(2024, 06, 30));
+            Term term = new Term(0, "Term 1", new Date(), new Date());
             repository.insert(term);
-            term = new Term(0, "Term 2", LocalDate.of(2024, 06, 01), LocalDate.of(2024, 12, 31));
+            term = new Term(0, "Term 2", new Date(), new Date());
             repository.insert(term);
-            Course course = new Course(0, "Mobile Application Development","In progress",LocalDate.of(2024, 01, 05),
-                    LocalDate.of(2024, 03, 30), 1,"Instructor", "instructor@wgu.edu", "5555555555");
+            Course course = new Course(0, "Mobile Application Development","In progress",new Date(),
+                    new Date(), 1,"Instructor", "instructor@wgu.edu", "5555555555");
             repository.insert(course);
-            Assessment assessment = new Assessment(0, "Mobile app project","Performance",LocalDate.of(2024, 04, 01) ,1);
+            Assessment assessment = new Assessment(0, "Mobile app project","Performance",new Date() ,1);
             repository.insert(assessment);
             return true;
 

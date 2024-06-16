@@ -2,11 +2,14 @@ package com.zybooks.bdavis_wguscheduler.UI;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,7 +59,6 @@ public class TermDetails extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        saveButton = findViewById(R.id.termDetailsSaveButton);
         editName = findViewById(R.id.termNameEditText);
         editStart = findViewById(R.id.termStartEditText);
         editEnd = findViewById(R.id.termEndEditText);
@@ -115,31 +117,27 @@ public class TermDetails extends AppCompatActivity {
             }
         };
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
 
-                String start = editStart.getText().toString();
-                String end = editEnd.getText().toString();
-                String myFormat = "MM/dd/yy";
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(myFormat);
-                LocalDate startDate = null;
-                LocalDate endDate = null;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_termdetails,menu);
+        return true;
+    }
 
-                try{
-                    startDate = LocalDate.parse(start, formatter);
-                    endDate = LocalDate.parse(end, formatter);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
 
-                }catch(DateTimeParseException e){
+        if(menuItem.getItemId() == R.id.saveTermDetails){
+            Toast.makeText(TermDetails.this, "Item will be saved", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        if(menuItem.getItemId() == android.R.id.home){
+            this.finish();
+            return true;
+        }
 
-                    System.out.println(e.getMessage());
-                }
-
-                Term term;
-
-
-            }
-        });
+        return true;
     }
 
 }

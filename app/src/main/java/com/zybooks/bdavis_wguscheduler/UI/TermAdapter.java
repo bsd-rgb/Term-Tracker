@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.entities.Term;
+import com.zybooks.bdavis_wguscheduler.util.TextFormatter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -58,17 +59,15 @@ String dateString = localDate.format(formatter);
                 @Override
                 public void onClick(View v) {
 
-                    String myFormat = "MM/dd/yy";
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(myFormat);
+
                     int position = getAdapterPosition();
                     final Term current = mTerms.get(position);
-                    String startDateString = current.getStartDate().format(formatter);
-                    String endDateString = current.getEndDate().format(formatter);
+
                     Intent intent = new Intent(context, TermDetails.class);
                     intent.putExtra("id", current.getTermId());
                     intent.putExtra("name", current.getTermName());
-                    intent.putExtra("startDate", startDateString);
-                    intent.putExtra("endDate", endDateString);
+                    intent.putExtra("startDate", TextFormatter.simpleDateFormat.format(current.getStartDate()));
+                    intent.putExtra("endDate", TextFormatter.simpleDateFormat.format(current.getEndDate()));
                     context.startActivity(intent);
 
                 }

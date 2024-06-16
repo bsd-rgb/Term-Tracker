@@ -79,14 +79,6 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/termDetailsSaveButton"
-        android:layout_width="115dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_weight=".5"
-        android:layout_gravity="center"
-        app:srcCompat="@android:drawable/ic_menu_save" />
 </LinearLayout>
 
 

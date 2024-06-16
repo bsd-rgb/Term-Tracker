@@ -14,10 +14,10 @@ public class Assessment {
 
     private String assessmentName;
     private String assessmentType;
-    private LocalDate endDate;
+    private Date endDate;
     private int courseId;
 
-    public Assessment(int assessmentId, String assessmentName, String assessmentType, LocalDate endDate, int courseId) {
+    public Assessment(int assessmentId, String assessmentName, String assessmentType, Date endDate, int courseId) {
         this.assessmentId = assessmentId;
         this.assessmentName = assessmentName;
         this.assessmentType = assessmentType;
@@ -49,11 +49,11 @@ public class Assessment {
         this.assessmentType = assessmentType;
     }
 
-    public LocalDate getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 

@@ -16,13 +16,13 @@ import java.util.List;
 public class Converters {
 
     @TypeConverter
-    public static LocalDate fromTimestamp(Long value) {
-        return value == null ? null : Instant.ofEpochMilli(value).atZone(ZoneId.systemDefault()).toLocalDate();
+    public static Date fromTimestamp(Long value) {
+        return value == null ? null : new Date(value);
     }
 
     @TypeConverter
-    public static Long dateToTimestamp(LocalDate date) {
-        return date == null ? null : date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    public static Long dateToTimestamp(Date date) {
+        return date == null ? null : date.getTime();
     }
 
 
