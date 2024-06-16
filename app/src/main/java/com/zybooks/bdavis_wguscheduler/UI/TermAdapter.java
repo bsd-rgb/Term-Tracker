@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.entities.Term;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder>{
@@ -37,15 +39,36 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
             termItemViewer = itemView.findViewById(R.id.termListItemTextview);
 
             itemView.setOnClickListener(new View.OnClickListener() {
+
+                /*import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+// Assuming current.getStartDate() returns a LocalDate
+LocalDate localDate = current.getStartDate();
+
+// Define the pattern for formatting
+String myFormat = "MM/dd/yy";
+
+// Create a DateTimeFormatter
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern(myFormat);
+
+// Format the LocalDate
+String dateString = localDate.format(formatter);
+*/
                 @Override
                 public void onClick(View v) {
+
+                    String myFormat = "MM/dd/yy";
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(myFormat);
                     int position = getAdapterPosition();
                     final Term current = mTerms.get(position);
+                    String startDateString = current.getStartDate().format(formatter);
+                    String endDateString = current.getEndDate().format(formatter);
                     Intent intent = new Intent(context, TermDetails.class);
                     intent.putExtra("id", current.getTermId());
                     intent.putExtra("name", current.getTermName());
-                    intent.putExtra("startDate", current.getStartDate());
-                    intent.putExtra("endDate", current.getEndDate());
+                    intent.putExtra("startDate", startDateString);
+                    intent.putExtra("endDate", endDateString);
                     context.startActivity(intent);
 
                 }

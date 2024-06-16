@@ -1,8 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".UI.TermDetails"/>
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="35dp"
+    android:padding="25dp"
+    tools:context=".UI.TermDetails" >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:textSize="20sp"
+            android:paddingTop="10dp"
+            android:text="Term Name: " />
+
+        <EditText
+            android:id="@+id/termNameEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:hint="Term Name"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:textSize="20sp"
+            android:paddingTop="10dp"
+            android:text="Term Start: " />
+
+        <EditText
+            android:id="@+id/termStartEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:inputType="date"
+            android:hint="Term Start"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:textSize="20sp"
+            android:paddingTop="10dp"
+            android:text="Term End: " />
+
+        <EditText
+            android:id="@+id/termEndEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:inputType="date"
+            android:hint="Term End"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/termDetailsSaveButton"
+        android:layout_width="115dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_weight=".5"
+        android:layout_gravity="center"
+        app:srcCompat="@android:drawable/ic_menu_save" />
+</LinearLayout>
+
+

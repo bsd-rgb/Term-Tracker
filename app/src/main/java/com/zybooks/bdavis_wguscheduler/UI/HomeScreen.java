@@ -80,7 +80,6 @@ public class HomeScreen extends AppCompatActivity {
         if (menuItem.getItemId() == R.id.sample) {
             repository = new Repository(getApplication());
             //Toast.makeText(HomeScreen.this, "Sample data to be added", Toast.LENGTH_LONG).show();
-
             Term term = new Term(0, "Term 1", LocalDate.of(2024, 01, 02), LocalDate.of(2024, 06, 30));
             repository.insert(term);
             term = new Term(0, "Term 2", LocalDate.of(2024, 06, 01), LocalDate.of(2024, 12, 31));
