@@ -16,7 +16,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.database.Repository;
+import com.zybooks.bdavis_wguscheduler.entities.Term;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CourseDetails extends AppCompatActivity {
@@ -29,6 +31,7 @@ public class CourseDetails extends AppCompatActivity {
     EditText editInstructorEmail;
     EditText editInstructorPhone;
     Spinner statusSpinner;
+    Spinner termSpinner;
     int courseId;
     int termId;
     String courseName;
@@ -38,6 +41,7 @@ public class CourseDetails extends AppCompatActivity {
     String instructorPhone;
     String start;
     String end;
+    boolean isEmpty;
     final Calendar myCalendarStart = Calendar.getInstance();
     final Calendar myCalendarEnd = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener startDate;
@@ -54,6 +58,17 @@ public class CourseDetails extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        repository = new Repository(getApplication());
+
+      termSpinner = (Spinner)findViewById(R.id.spTerms);
+          ArrayList<Term> termArrayList = new ArrayList<Term>();
+        for(Term terms: repository.getmAllTerms()){
+            termArrayList.add(terms);
+        }
+
+        ArrayAdapter<Term> termAdapter = new ArrayAdapter<Term>(this, android.R.layout.simple_spinner_item, termArrayList);
+        termSpinner.setAdapter(termAdapter);
 
         editName = findViewById(R.id.courseNameEditText);
         editStart = findViewById(R.id.courseStartEditText);
@@ -81,7 +96,13 @@ public class CourseDetails extends AppCompatActivity {
         selectSpinnerItemByValue(statusSpinner, courseStatus);
 
 
-        repository = new Repository(getApplication());
+
+        if(editName.getText().toString().isEmpty() && editStart.getText().toString().isEmpty() && editEnd.getText().toString().isEmpty()
+            && editInstructorName.getText().toString().isEmpty() && editInstructorEmail.getText().toString().isEmpty() && editInstructorPhone.getText().toString().isEmpty()){
+            isEmpty = true;
+
+
+        }
     }
 
     public static void selectSpinnerItemByValue(Spinner spinner, String value){
@@ -99,7 +120,11 @@ public class CourseDetails extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_coursedetails, menu);
+        if(isEmpty){
+            getMenuInflater().inflate(R.menu.menu_new, menu);
+        }else{
+            getMenuInflater().inflate(R.menu.menu_details, menu);
+        }
         return true;
     }
 }

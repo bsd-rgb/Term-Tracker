@@ -46,6 +46,7 @@ public class TermDetails extends AppCompatActivity {
     EditText editName;
     EditText editStart;
     EditText editEnd;
+    boolean isEmpty;
 
     final Calendar myCalendarStart = Calendar.getInstance();
 
@@ -76,6 +77,7 @@ public class TermDetails extends AppCompatActivity {
         editName.setText(name);
         editStart.setText(start);
         editEnd.setText(end);
+
 
         editStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,11 +135,20 @@ public class TermDetails extends AppCompatActivity {
         }
         courseAdapter.setCourses(filteredCourses);
 
+
+        if(editName.getText().toString().isEmpty() && editStart.getText().toString().isEmpty() && editEnd.getText().toString().isEmpty()){
+            isEmpty = true;
+        }
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_termdetails,menu);
+        if(isEmpty){
+            getMenuInflater().inflate(R.menu.menu_new, menu);
+        }else {
+            getMenuInflater().inflate(R.menu.menu_details, menu);
+        }
         return true;
     }
 
@@ -153,14 +164,11 @@ public class TermDetails extends AppCompatActivity {
         try{
             startDate = TextFormatter.simpleDateFormat.parse(startString);
             endDate = TextFormatter.simpleDateFormat.parse(endString);
-            Log.d("myTag", "Start Date: " + startDate);
-            Log.d("myTag", "End Date: " + endDate);
-
         }catch(ParseException e){
             System.out.println(e.getMessage());
         }
 
-        if(menuItem.getItemId() == R.id.saveTermDetails){
+        if(menuItem.getItemId() == R.id.saveDetails){
 
             Term term;
             if(termId ==  -1){

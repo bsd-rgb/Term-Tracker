@@ -21,6 +21,9 @@ public class Term {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+    public String toString(){
+        return termName;
+    }
 
     public int getTermId() {
         return termId;

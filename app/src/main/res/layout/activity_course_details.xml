@@ -149,6 +149,8 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
         android:text="Course Status"
         android:textStyle="bold" />
 
@@ -159,7 +161,24 @@
         android:layout_marginTop="10dp"
         android:entries="@array/courseStatusChoices">
     </Spinner>
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:text="Terms"
+        android:textStyle="bold" />
 
+    <Spinner
+        android:id="@+id/spTerms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+    </Spinner>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/assessmentRecyclerView"
         android:layout_width="409dp"
@@ -167,6 +186,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="221dp" />
+
+</ScrollView>
 
 </LinearLayout>
 

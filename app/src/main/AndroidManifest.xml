@@ -13,16 +13,6 @@
         android:theme="@style/Theme.BDavis_WGUScheduler"
         tools:targetApi="31">
         <activity
-            android:name=".UI.AssessmentNew"
-            android:label="New Assessment"
-            android:parentActivityName=".UI.AssessmentList"
-            android:exported="false" />
-        <activity
-            android:name=".UI.CourseNew"
-            android:label="New Couse"
-            android:parentActivityName=".UI.CourseList"
-            android:exported="false" />
-        <activity
             android:name=".UI.AssessmentDetails"
             android:exported="false"
             android:label="Assessment Details"
