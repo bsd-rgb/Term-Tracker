@@ -2,6 +2,7 @@ package com.zybooks.bdavis_wguscheduler.UI;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,30 +17,35 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.database.Repository;
+import com.zybooks.bdavis_wguscheduler.entities.Course;
 import com.zybooks.bdavis_wguscheduler.entities.Term;
+import com.zybooks.bdavis_wguscheduler.util.TextFormatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class TermDetails extends AppCompatActivity {
 
     int termId;
-    String termName;
+    String name;
     String start;
     String end;
-
     EditText editName;
     EditText editStart;
     EditText editEnd;
-    ImageButton saveButton;
 
     final Calendar myCalendarStart = Calendar.getInstance();
 
@@ -63,11 +69,11 @@ public class TermDetails extends AppCompatActivity {
         editStart = findViewById(R.id.termStartEditText);
         editEnd = findViewById(R.id.termEndEditText);
         termId = getIntent().getIntExtra("id", -1);
-        termName = getIntent().getStringExtra("name");
+        name = getIntent().getStringExtra("name");
         start = getIntent().getStringExtra("startDate");
         end = getIntent().getStringExtra("endDate");
 
-        editName.setText(termName);
+        editName.setText(name);
         editStart.setText(start);
         editEnd.setText(end);
 
@@ -87,9 +93,8 @@ public class TermDetails extends AppCompatActivity {
                 myCalendarStart.set(Calendar.YEAR, year);
                 myCalendarStart.set(Calendar.MONTH, month);
                 myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "MM/dd/yy"; //In which you need put here
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-                editStart.setText(sdf.format(myCalendarStart.getTime()));
+                editStart.setText(TextFormatter.simpleDateFormat.format(myCalendarStart.getTime()));
+
 
             }
         };
@@ -110,12 +115,23 @@ public class TermDetails extends AppCompatActivity {
                 myCalendarEnd.set(Calendar.YEAR, year);
                 myCalendarEnd.set(Calendar.MONTH, month);
                 myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "MM/dd/yy"; //In which you need put here
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-                editEnd.setText(sdf.format(myCalendarEnd.getTime()));
+                editEnd.setText(TextFormatter.simpleDateFormat.format(myCalendarEnd.getTime()));
 
             }
         };
+
+        RecyclerView recyclerView = findViewById(R.id.courseRecyclerView);
+        repository = new Repository(getApplication());
+        final CourseAdapter courseAdapter = new CourseAdapter((this));
+        recyclerView.setAdapter(courseAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Course> filteredCourses = new ArrayList<>();
+        for(Course course: repository.getmAllCourses()){
+            if(course.getTermId() == termId){
+                filteredCourses.add(course);
+            }
+        }
+        courseAdapter.setCourses(filteredCourses);
 
     }
 
@@ -128,8 +144,42 @@ public class TermDetails extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
 
+        String startString = editStart.getText().toString();
+        String endString = editEnd.getText().toString();
+
+        Date startDate = null;
+        Date endDate = null;
+
+        try{
+            startDate = TextFormatter.simpleDateFormat.parse(startString);
+            endDate = TextFormatter.simpleDateFormat.parse(endString);
+            Log.d("myTag", "Start Date: " + startDate);
+            Log.d("myTag", "End Date: " + endDate);
+
+        }catch(ParseException e){
+            System.out.println(e.getMessage());
+        }
+
         if(menuItem.getItemId() == R.id.saveTermDetails){
-            Toast.makeText(TermDetails.this, "Item will be saved", Toast.LENGTH_LONG).show();
+
+            Term term;
+            if(termId ==  -1){
+
+                if(repository.getmAllTerms().size() == 0){
+                    termId = 1;
+                }else{
+                    termId = repository.getmAllTerms().get(repository.getmAllTerms().size() - 1).getTermId() + 1;
+                }
+                term = new Term(termId, editName.getText().toString(),startDate, endDate);
+                repository.insert(term);
+                this.finish();
+
+            }else{
+                term = new Term(termId,editName.getText().toString(),startDate, endDate);
+                repository.update(term);
+                this.finish();
+
+            }
             return true;
         }
         if(menuItem.getItemId() == android.R.id.home){

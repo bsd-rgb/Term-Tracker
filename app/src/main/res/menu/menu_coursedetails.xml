@@ -2,12 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Save Term"
-        android:id="@+id/saveTermDetails" />
+        android:title="Save Course"
+        android:id="@+id/saveCourseDetails" />
 
     <item
         android:title="Delete"
-        android:id="@+id/deleteTermDetails" />
-
+        android:id="@+id/deleteCourseDetails" />
 
 </menu>

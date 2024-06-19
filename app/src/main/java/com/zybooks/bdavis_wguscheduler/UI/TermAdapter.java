@@ -41,21 +41,6 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
 
             itemView.setOnClickListener(new View.OnClickListener() {
 
-                /*import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
-// Assuming current.getStartDate() returns a LocalDate
-LocalDate localDate = current.getStartDate();
-
-// Define the pattern for formatting
-String myFormat = "MM/dd/yy";
-
-// Create a DateTimeFormatter
-DateTimeFormatter formatter = DateTimeFormatter.ofPattern(myFormat);
-
-// Format the LocalDate
-String dateString = localDate.format(formatter);
-*/
                 @Override
                 public void onClick(View v) {
 

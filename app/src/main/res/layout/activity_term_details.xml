@@ -79,6 +79,14 @@
 
     </LinearLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/courseRecyclerView"
+        android:layout_width="409dp"
+        android:layout_height="495dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="221dp" />
+
 </LinearLayout>
 
 

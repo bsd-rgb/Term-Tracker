@@ -39,7 +39,7 @@ public class TermList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(TermList.this, TermNew.class);
+                Intent intent = new Intent(TermList.this, TermDetails.class);
                 startActivity(intent);
 
             }
@@ -52,5 +52,18 @@ public class TermList extends AppCompatActivity {
         recyclerView.setAdapter(termAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         termAdapter.setTerms(allTerms);
+    }
+
+    @Override
+    protected void onResume(){
+
+        super.onResume();
+        List<Term> allTerms = repository.getmAllTerms();
+        RecyclerView recyclerView = findViewById(R.id.termListReyclerview);
+        final TermAdapter termAdapter = new TermAdapter(this);
+        recyclerView.setAdapter(termAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        termAdapter.setTerms(allTerms);
+
     }
 }

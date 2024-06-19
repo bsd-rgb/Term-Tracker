@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.entities.Course;
+import com.zybooks.bdavis_wguscheduler.util.TextFormatter;
 
 import java.util.List;
 
@@ -43,8 +44,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                     intent.putExtra("name", current.getCourseName());
                     intent.putExtra("status", current.getStatus());
                     intent.putExtra("termId", current.getTermId());
-                    intent.putExtra("startDate", current.getStartDate());
-                    intent.putExtra("endDate", current.getEndDate());
+                    intent.putExtra("startDate", TextFormatter.simpleDateFormat.format(current.getStartDate()));
+                    intent.putExtra("endDate", TextFormatter.simpleDateFormat.format(current.getEndDate()));
                     intent.putExtra("instructorName", current.getInstructorName());
                     intent.putExtra("instructorEmail", current.getInstructorEmail());
                     intent.putExtra("instructorPhone", current.getInstructorPhone());

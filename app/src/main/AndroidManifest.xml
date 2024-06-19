@@ -23,11 +23,6 @@
             android:parentActivityName=".UI.CourseList"
             android:exported="false" />
         <activity
-            android:name=".UI.TermNew"
-            android:label="New Term"
-            android:parentActivityName=".UI.TermList"
-            android:exported="false" />
-        <activity
             android:name=".UI.AssessmentDetails"
             android:exported="false"
             android:label="Assessment Details"
