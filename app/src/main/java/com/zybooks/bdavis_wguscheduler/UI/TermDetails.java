@@ -168,7 +168,7 @@ public class TermDetails extends AppCompatActivity {
             System.out.println(e.getMessage());
         }
 
-        if(menuItem.getItemId() == R.id.saveDetails){
+        if(menuItem.getItemId() == R.id.saveDetails || menuItem.getItemId() == R.id.saveItem){
 
             Term term;
             if(termId ==  -1){

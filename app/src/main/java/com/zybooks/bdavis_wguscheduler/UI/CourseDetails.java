@@ -2,8 +2,12 @@ package com.zybooks.bdavis_wguscheduler.UI;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -13,16 +17,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.database.Repository;
+import com.zybooks.bdavis_wguscheduler.entities.Assessment;
+import com.zybooks.bdavis_wguscheduler.entities.Course;
 import com.zybooks.bdavis_wguscheduler.entities.Term;
+import com.zybooks.bdavis_wguscheduler.util.TextFormatter;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class CourseDetails extends AppCompatActivity {
-
     Repository repository;
     EditText editName;
     EditText editStart;
@@ -79,6 +90,7 @@ public class CourseDetails extends AppCompatActivity {
         statusSpinner = findViewById(R.id.spCourseStatus);
 
         courseId = getIntent().getIntExtra("id", -1);
+        termId = getIntent().getIntExtra("termId", -1);
         courseName = getIntent().getStringExtra("name");
         courseStatus = getIntent().getStringExtra("status");
         start = getIntent().getStringExtra("startDate");
@@ -95,14 +107,75 @@ public class CourseDetails extends AppCompatActivity {
         editInstructorPhone.setText(instructorPhone);
         selectSpinnerItemByValue(statusSpinner, courseStatus);
 
-
-
         if(editName.getText().toString().isEmpty() && editStart.getText().toString().isEmpty() && editEnd.getText().toString().isEmpty()
             && editInstructorName.getText().toString().isEmpty() && editInstructorEmail.getText().toString().isEmpty() && editInstructorPhone.getText().toString().isEmpty()){
             isEmpty = true;
-
-
         }
+        editStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new DatePickerDialog(CourseDetails.this, startDate, myCalendarStart
+                        .get(Calendar.YEAR), myCalendarStart.get(Calendar.MONTH),
+                        myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        startDate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                myCalendarStart.set(Calendar.YEAR, year);
+                myCalendarStart.set(Calendar.MONTH, month);
+                myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                editStart.setText(TextFormatter.simpleDateFormat.format(myCalendarStart.getTime()));
+
+
+            }
+        };
+
+        editEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new DatePickerDialog(CourseDetails.this, endDate, myCalendarEnd
+                        .get(Calendar.YEAR), myCalendarEnd.get(Calendar.MONTH),
+                        myCalendarEnd.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        endDate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                myCalendarEnd.set(Calendar.YEAR, year);
+                myCalendarEnd.set(Calendar.MONTH, month);
+                myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                editEnd.setText(TextFormatter.simpleDateFormat.format(myCalendarEnd.getTime()));
+
+            }
+        };
+
+
+
+        if (termId != -1) {
+            int position = getTermPositionById(termArrayList, termId);
+            if (position >= 0) {
+                termSpinner.setSelection(position);
+            } else {
+                termSpinner.setSelection(0);
+            }
+        }
+
+        RecyclerView recyclerView = findViewById(R.id.assessmentRecyclerView);
+        final AssessmentAdapter assessmentAdapter = new AssessmentAdapter((this));
+        recyclerView.setAdapter(assessmentAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Assessment> filteredAssessments = new ArrayList<>();
+        for(Assessment assessment: repository.getmAllAssessments()){
+            if(assessment.getAssessmentId() == courseId){
+                filteredAssessments.add(assessment);
+            }
+        }
+        assessmentAdapter.setAssessments(filteredAssessments);
     }
 
     public static void selectSpinnerItemByValue(Spinner spinner, String value){
@@ -118,6 +191,17 @@ public class CourseDetails extends AppCompatActivity {
         }
     }
 
+    private int getTermPositionById(ArrayList<Term> termList, int termId) {
+        for (int i = 0; i < termList.size(); i++) {
+            if (termList.get(i).getTermId() == termId) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         if(isEmpty){
@@ -127,4 +211,51 @@ public class CourseDetails extends AppCompatActivity {
         }
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem){
+
+        String startString = editStart.getText().toString();
+        String endString = editEnd.getText().toString();
+        Term selectedTerm = (Term)termSpinner.getSelectedItem();
+
+        Date startDate = null;
+        Date endDate = null;
+
+
+        try{
+            startDate = TextFormatter.simpleDateFormat.parse(startString);
+            endDate = TextFormatter.simpleDateFormat.parse(endString);
+        }catch(ParseException e){
+            System.out.println(e.getMessage());
+        }
+        if(menuItem.getItemId() == R.id.saveDetails || menuItem.getItemId() == R.id.saveItem){
+            Course course;
+            if(courseId == -1){
+                if(repository.getmAllCourses().size() == 0){
+                    courseId = 1;
+                }else{
+                    courseId = repository.getmAllCourses().get(repository.getmAllCourses().size() - 1).getCourseId() + 1;
+                }
+                course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
+                        ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
+                repository.insert(course);
+                this.finish();
+            }else{
+                course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
+                        ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
+                repository.update(course);
+                this.finish();
+
+            }
+
+        }
+        if(menuItem.getItemId() == android.R.id.home){
+            this.finish();
+            return true;
+
+        }
+        return true;
+    }
+
 }

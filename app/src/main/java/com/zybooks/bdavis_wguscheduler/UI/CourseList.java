@@ -51,4 +51,16 @@ public class CourseList extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         courseAdapter.setCourses(allCourses);
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        List<Course> allCourses = repository.getmAllCourses();
+        RecyclerView recyclerView = findViewById(R.id.courseListRecyclerview);
+        final CourseAdapter courseAdapter = new CourseAdapter(this);
+        recyclerView.setAdapter(courseAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        courseAdapter.setCourses(allCourses);
+    }
+
 }
