@@ -1,6 +1,8 @@
 package com.zybooks.bdavis_wguscheduler.UI;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -50,6 +53,7 @@ public class TermDetails extends AppCompatActivity {
     EditText editStart;
     EditText editEnd;
     boolean isEmpty;
+    Term currentTerm;
 
     final Calendar myCalendarStart = Calendar.getInstance();
 
@@ -144,6 +148,9 @@ public class TermDetails extends AppCompatActivity {
 
         if(editName.getText().toString().isEmpty() && editStart.getText().toString().isEmpty() && editEnd.getText().toString().isEmpty()){
             isEmpty = true;
+            fab.setVisibility(View.INVISIBLE);
+            TextView associatedCourseText = findViewById(R.id.associatedCoursesText);
+            associatedCourseText.setVisibility(View.INVISIBLE);
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -151,7 +158,6 @@ public class TermDetails extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(TermDetails.this, CourseDetails.class);
                 intent.putExtra("courseTermId", termId);
-                Log.d("TermDetails", "Passing term ID: " + termId);
                 startActivity(intent);
             }
         });
@@ -160,10 +166,13 @@ public class TermDetails extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
+
         if(isEmpty){
             getMenuInflater().inflate(R.menu.menu_new, menu);
         }else {
             getMenuInflater().inflate(R.menu.menu_details, menu);
+            MenuItem shareItem = menu.findItem(R.id.shareNote);
+            shareItem.setVisible(false);
         }
         return true;
     }
@@ -204,8 +213,29 @@ public class TermDetails extends AppCompatActivity {
                 this.finish();
 
             }
-            return true;
         }
+        if(menuItem.getItemId() == R.id.deleteDetails){
+            for(Term term: repository.getmAllTerms()){
+                if(term.getTermId() == termId){
+                    currentTerm = term;
+                }
+            }
+            int numCourses = 0;
+            for(Course course: repository.getmAllCourses()){
+                if(course.getTermId() == termId){
+                    numCourses++;
+                }
+            }
+            if(numCourses == 0){
+                AlertDialog.Builder deleteDialog = createDeleteConfirmationDialog();
+                deleteDialog.show();
+            }else{
+                AlertDialog.Builder infoDialog = createInfoDialog();
+                infoDialog.show();
+            }
+        }
+
+
         if(menuItem.getItemId() == android.R.id.home){
             this.finish();
             return true;
@@ -213,5 +243,39 @@ public class TermDetails extends AppCompatActivity {
 
         return true;
     }
+
+    private AlertDialog.Builder createDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to delete this term?");
+        builder.setTitle("Confirm Term Deletion");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i){
+                repository.delete(currentTerm);
+                TermDetails.this.finish();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        return builder;
+    }
+
+    private AlertDialog.Builder createInfoDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Term cannot be deleted with associated courses assigned.");
+        builder.setTitle("Warning");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        return builder;
+    }
+
 
 }

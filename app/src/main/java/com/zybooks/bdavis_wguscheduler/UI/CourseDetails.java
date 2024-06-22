@@ -1,6 +1,7 @@
 package com.zybooks.bdavis_wguscheduler.UI;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.database.Repository;
 import com.zybooks.bdavis_wguscheduler.entities.Assessment;
@@ -73,6 +76,9 @@ public class CourseDetails extends AppCompatActivity {
             return insets;
         });
 
+        FloatingActionButton fab = findViewById(R.id.addAssessmentFAB);
+
+
         repository = new Repository(getApplication());
 
         termSpinner = (Spinner)findViewById(R.id.spTerms);
@@ -87,7 +93,9 @@ public class CourseDetails extends AppCompatActivity {
 
         courseId = getIntent().getIntExtra("id", -1);
         termId = getIntent().getIntExtra("termId", -1);
+        Log.d("CourseDetails", "Term ID: " + termId);
         courseTermId = getIntent().getIntExtra("courseTermId", -1);
+        Log.d("CourseDetails", "Course Term ID: " + courseTermId);
         courseName = getIntent().getStringExtra("name");
         courseStatus = getIntent().getStringExtra("status");
         start = getIntent().getStringExtra("startDate");
@@ -117,6 +125,10 @@ public class CourseDetails extends AppCompatActivity {
         if(editName.getText().toString().isEmpty() && editStart.getText().toString().isEmpty() && editEnd.getText().toString().isEmpty()
             && editInstructorName.getText().toString().isEmpty() && editInstructorEmail.getText().toString().isEmpty() && editInstructorPhone.getText().toString().isEmpty()){
             isEmpty = true;
+
+             fab.setVisibility(View.INVISIBLE);
+            TextView associatedAssessmentText = findViewById(R.id.textView6);
+            associatedAssessmentText.setVisibility(View.INVISIBLE);
         }
         editStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +180,7 @@ public class CourseDetails extends AppCompatActivity {
             }
         }else if(courseTermId != -1){
             int courseTermIdPosition = getTermPositionById(termArrayList, courseTermId);
-            if(courseTermIdPosition >0){
+            if(courseTermIdPosition > 0){
                 termSpinner.setSelection(courseTermIdPosition);
             }
 
@@ -187,6 +199,15 @@ public class CourseDetails extends AppCompatActivity {
             }
         }
         assessmentAdapter.setAssessments(filteredAssessments);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CourseDetails.this, AssessmentDetails.class);
+                intent.putExtra("associatedCourseIdFromCourse", courseId);
+                startActivity(intent);
+            }
+        });
     }
 
     public static void selectSpinnerItemByValue(Spinner spinner, String value){

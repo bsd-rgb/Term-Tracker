@@ -49,6 +49,10 @@ public class Course {
         this.note = "";
     }
 
+    public String toString(){
+        return courseName;
+    }
+
     public int getCourseId() {
         return courseId;
     }

@@ -50,4 +50,16 @@ public class AssessmentList extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         assessmentAdapter.setAssessments(allAssessments);
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        List<Assessment> allAssessments = repository.getmAllAssessments();
+        RecyclerView recyclerView = findViewById(R.id.assessmentListReyclerview);
+        final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
+        recyclerView.setAdapter(assessmentAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        assessmentAdapter.setAssessments(allAssessments);
+    }
+
 }

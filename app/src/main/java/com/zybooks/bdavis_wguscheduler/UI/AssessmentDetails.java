@@ -2,6 +2,10 @@ package com.zybooks.bdavis_wguscheduler.UI;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -16,21 +20,29 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.database.Repository;
+import com.zybooks.bdavis_wguscheduler.entities.Assessment;
+import com.zybooks.bdavis_wguscheduler.entities.Course;
+import com.zybooks.bdavis_wguscheduler.entities.Term;
 import com.zybooks.bdavis_wguscheduler.util.TextFormatter;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AssessmentDetails extends AppCompatActivity {
 
     Repository repository;
     int assessmentId;
     int associatedCourseId;
+    int assessmentCourseId;
     String assessmentName;
     String assessmentType;
     EditText editName;
     EditText editStart;
     EditText editEnd;
     Spinner assessmentTypeSpinner;
+    Spinner courseSpinner;
     String start;
     String end;
     boolean isEmpty;
@@ -52,6 +64,7 @@ public class AssessmentDetails extends AppCompatActivity {
 
         repository = new Repository(getApplication());
 
+        courseSpinner = (Spinner) findViewById(R.id.associatedCourseSpinner);
         assessmentTypeSpinner = findViewById(R.id.assessmentSpinner);
         editName = findViewById(R.id.assessmentNameEditText);
         editStart = findViewById(R.id.assessmentStartEditText);
@@ -61,6 +74,8 @@ public class AssessmentDetails extends AppCompatActivity {
         assessmentName = getIntent().getStringExtra("name");
         assessmentType = getIntent().getStringExtra("type");
         associatedCourseId = getIntent().getIntExtra("associatedCourseId", -1);
+        assessmentCourseId = getIntent().getIntExtra("associatedCourseIdFromCourse", -1);
+        Log.d("AssessmentDetails", "Assessment Course ID: " + assessmentCourseId);
         start = getIntent().getStringExtra("startDate");
         end = getIntent().getStringExtra("endDate");
 
@@ -68,6 +83,28 @@ public class AssessmentDetails extends AppCompatActivity {
         editStart.setText(start);
         editEnd.setText(end);
         selectSpinnerItemByValue(assessmentTypeSpinner, assessmentType);
+
+        ArrayList<Course> courseArrayList = new ArrayList<Course>();
+        for(Course course: repository.getmAllCourses()){
+            courseArrayList.add(course);
+        }
+
+        ArrayAdapter<Course> courseArrayAdapter = new ArrayAdapter<Course>(this, android.R.layout.simple_spinner_item, courseArrayList);
+        courseSpinner.setAdapter(courseArrayAdapter);
+
+        if(assessmentId != -1){
+            int position = getTermPositionById(courseArrayList, assessmentId);
+            if(position >= 0){
+                courseSpinner.setSelection(position);
+            }
+        }else if(assessmentCourseId != -1){
+            int assessmentCourseIdPosition = getTermPositionById(courseArrayList, assessmentCourseId);
+            if(assessmentCourseIdPosition > 0){
+                courseSpinner.setSelection(assessmentCourseIdPosition);
+            }
+        }else{
+            courseSpinner.setSelection(0);
+        }
 
         editStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,9 +148,11 @@ public class AssessmentDetails extends AppCompatActivity {
 
             }
         };
-        //check to see if fields are empty to set the menu type
-        //work add the menu
-        //test saving/updating
+
+        if(editName.getText().toString().isEmpty() && editStart.getText().toString().isEmpty() && editEnd.getText().toString().isEmpty()){
+            isEmpty = true;
+
+        }
     }
     public static void selectSpinnerItemByValue(Spinner spinner, String value){
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
@@ -127,4 +166,67 @@ public class AssessmentDetails extends AppCompatActivity {
             }
         }
     }
+
+    private int getTermPositionById(ArrayList<Course> courseList, int associatedCourseId) {
+        for (int i = 0; i < courseList.size(); i++) {
+            if (courseList.get(i).getCourseId() == associatedCourseId) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        if(isEmpty){
+
+            getMenuInflater().inflate(R.menu.menu_new, menu);
+
+        }else{
+            getMenuInflater().inflate(R.menu.menu_details, menu);
+            MenuItem shareItem = menu.findItem(R.id.shareNote);
+            shareItem.setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        Course selectedCourse = (Course) courseSpinner.getSelectedItem();
+        String startString = editStart.getText().toString();
+        String endString = editEnd.getText().toString();
+        Date startDate = null;
+        Date endDate = null;
+
+        try{
+            startDate = TextFormatter.simpleDateFormat.parse(startString);
+            endDate = TextFormatter.simpleDateFormat.parse(endString);
+        }catch(ParseException e){
+            System.out.println(e.getMessage());
+        }
+
+        if(item.getItemId() == R.id.saveDetails || item.getItemId() == R.id.saveItem){
+            Assessment assessment;
+            if(assessmentId == -1){
+                if(repository.getmAllAssessments().size() == 0){
+                    assessmentId = 1;
+                }else{
+                    assessmentId = repository.getmAllAssessments().get(repository.getmAllAssessments().size() - 1).getAssessmentId() + 1;
+                }
+                assessment = new Assessment(assessmentId, editName.getText().toString(), assessmentTypeSpinner.getSelectedItem().toString(), startDate, endDate, selectedCourse.getCourseId());
+                repository.insert(assessment);
+                this.finish();
+            }else{
+                assessment = new Assessment(assessmentId, editName.getText().toString(), assessmentTypeSpinner.getSelectedItem().toString(), startDate, endDate, selectedCourse.getCourseId());
+                repository.update(assessment);
+                this.finish();
+            }
+        }
+        if(item.getItemId() == android.R.id.home){
+            this.finish();
+        }
+        return true;
+    }
 }
+
