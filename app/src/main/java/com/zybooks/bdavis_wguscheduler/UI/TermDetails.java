@@ -1,11 +1,13 @@
 package com.zybooks.bdavis_wguscheduler.UI;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.database.Repository;
 import com.zybooks.bdavis_wguscheduler.entities.Course;
@@ -66,6 +69,9 @@ public class TermDetails extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        FloatingActionButton fab = findViewById(R.id.addCourseFAB);
+
         editName = findViewById(R.id.termNameEditText);
         editStart = findViewById(R.id.termStartEditText);
         editEnd = findViewById(R.id.termEndEditText);
@@ -139,6 +145,16 @@ public class TermDetails extends AppCompatActivity {
         if(editName.getText().toString().isEmpty() && editStart.getText().toString().isEmpty() && editEnd.getText().toString().isEmpty()){
             isEmpty = true;
         }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TermDetails.this, CourseDetails.class);
+                intent.putExtra("courseTermId", termId);
+                Log.d("TermDetails", "Passing term ID: " + termId);
+                startActivity(intent);
+            }
+        });
 
     }
 

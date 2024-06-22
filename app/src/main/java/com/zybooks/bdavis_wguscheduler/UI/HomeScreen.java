@@ -88,7 +88,7 @@ public class HomeScreen extends AppCompatActivity {
             Course course = new Course(0, "Mobile Application Development","In progress",new Date(),
                     new Date(), 1,"Instructor", "instructor@wgu.edu", "5555555555");
             repository.insert(course);
-            Assessment assessment = new Assessment(0, "Mobile app project","Performance",new Date() ,1);
+            Assessment assessment = new Assessment(0, "Mobile app project","Performance Assessment",new Date() ,new Date(), 1);
             repository.insert(assessment);
             return true;
 

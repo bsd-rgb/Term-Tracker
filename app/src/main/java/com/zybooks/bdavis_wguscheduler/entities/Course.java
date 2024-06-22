@@ -1,6 +1,7 @@
 package com.zybooks.bdavis_wguscheduler.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDate;
@@ -19,7 +20,22 @@ public class Course {
     private String instructorName;
     private String instructorEmail;
     private String instructorPhone;
+    private String note;
 
+    public Course(int courseId, String courseName, String status, Date startDate, Date endDate, int termId, String instructorName, String instructorEmail, String instructorPhone, String note) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.termId = termId;
+        this.instructorName = instructorName;
+        this.instructorEmail = instructorEmail;
+        this.instructorPhone = instructorPhone;
+        this.note = note;
+    }
+
+    @Ignore
     public Course(int courseId, String courseName, String status, Date startDate, Date endDate, int termId, String instructorName, String instructorEmail, String instructorPhone) {
         this.courseId = courseId;
         this.courseName = courseName;
@@ -30,6 +46,7 @@ public class Course {
         this.instructorName = instructorName;
         this.instructorEmail = instructorEmail;
         this.instructorPhone = instructorPhone;
+        this.note = "";
     }
 
     public int getCourseId() {
@@ -102,5 +119,13 @@ public class Course {
 
     public void setInstructorPhone(String instructorPhone) {
         this.instructorPhone = instructorPhone;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

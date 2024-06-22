@@ -41,10 +41,12 @@ public class CourseDetails extends AppCompatActivity {
     EditText editInstructorName;
     EditText editInstructorEmail;
     EditText editInstructorPhone;
+    EditText editNote;
     Spinner statusSpinner;
     Spinner termSpinner;
     int courseId;
     int termId;
+    int courseTermId;
     String courseName;
     String courseStatus;
     String instructorName;
@@ -52,6 +54,7 @@ public class CourseDetails extends AppCompatActivity {
     String instructorPhone;
     String start;
     String end;
+    String note;
     boolean isEmpty;
     final Calendar myCalendarStart = Calendar.getInstance();
     final Calendar myCalendarEnd = Calendar.getInstance();
@@ -72,25 +75,19 @@ public class CourseDetails extends AppCompatActivity {
 
         repository = new Repository(getApplication());
 
-      termSpinner = (Spinner)findViewById(R.id.spTerms);
-          ArrayList<Term> termArrayList = new ArrayList<Term>();
-        for(Term terms: repository.getmAllTerms()){
-            termArrayList.add(terms);
-        }
-
-        ArrayAdapter<Term> termAdapter = new ArrayAdapter<Term>(this, android.R.layout.simple_spinner_item, termArrayList);
-        termSpinner.setAdapter(termAdapter);
-
+        termSpinner = (Spinner)findViewById(R.id.spTerms);
         editName = findViewById(R.id.courseNameEditText);
         editStart = findViewById(R.id.courseStartEditText);
         editEnd = findViewById(R.id.courseEndEditText);
         editInstructorName = findViewById(R.id.courseInstructorNameEditText);
         editInstructorEmail = findViewById(R.id.courseInstructorEmailEditText);
         editInstructorPhone = findViewById(R.id.courseInstructorPhoneEditText);
+        editNote = findViewById(R.id.courseNoteEdit);
         statusSpinner = findViewById(R.id.spCourseStatus);
 
         courseId = getIntent().getIntExtra("id", -1);
         termId = getIntent().getIntExtra("termId", -1);
+        courseTermId = getIntent().getIntExtra("courseTermId", -1);
         courseName = getIntent().getStringExtra("name");
         courseStatus = getIntent().getStringExtra("status");
         start = getIntent().getStringExtra("startDate");
@@ -98,6 +95,7 @@ public class CourseDetails extends AppCompatActivity {
         instructorName = getIntent().getStringExtra("instructorName");
         instructorEmail = getIntent().getStringExtra("instructorEmail");
         instructorPhone = getIntent().getStringExtra("instructorPhone");
+        note = getIntent().getStringExtra("note");
 
         editName.setText(courseName);
         editStart.setText(start);
@@ -105,7 +103,16 @@ public class CourseDetails extends AppCompatActivity {
         editInstructorName.setText(instructorName);
         editInstructorEmail.setText(instructorEmail);
         editInstructorPhone.setText(instructorPhone);
+        editNote.setText(note);
         selectSpinnerItemByValue(statusSpinner, courseStatus);
+
+        ArrayList<Term> termArrayList = new ArrayList<Term>();
+        for(Term terms: repository.getmAllTerms()){
+            termArrayList.add(terms);
+        }
+
+        ArrayAdapter<Term> termAdapter = new ArrayAdapter<Term>(this, android.R.layout.simple_spinner_item, termArrayList);
+        termSpinner.setAdapter(termAdapter);
 
         if(editName.getText().toString().isEmpty() && editStart.getText().toString().isEmpty() && editEnd.getText().toString().isEmpty()
             && editInstructorName.getText().toString().isEmpty() && editInstructorEmail.getText().toString().isEmpty() && editInstructorPhone.getText().toString().isEmpty()){
@@ -154,15 +161,19 @@ public class CourseDetails extends AppCompatActivity {
             }
         };
 
-
-
         if (termId != -1) {
             int position = getTermPositionById(termArrayList, termId);
             if (position >= 0) {
                 termSpinner.setSelection(position);
-            } else {
-                termSpinner.setSelection(0);
             }
+        }else if(courseTermId != -1){
+            int courseTermIdPosition = getTermPositionById(termArrayList, courseTermId);
+            if(courseTermIdPosition >0){
+                termSpinner.setSelection(courseTermIdPosition);
+            }
+
+        }else {
+            termSpinner.setSelection(0);
         }
 
         RecyclerView recyclerView = findViewById(R.id.assessmentRecyclerView);
@@ -218,10 +229,8 @@ public class CourseDetails extends AppCompatActivity {
         String startString = editStart.getText().toString();
         String endString = editEnd.getText().toString();
         Term selectedTerm = (Term)termSpinner.getSelectedItem();
-
         Date startDate = null;
         Date endDate = null;
-
 
         try{
             startDate = TextFormatter.simpleDateFormat.parse(startString);
@@ -229,6 +238,7 @@ public class CourseDetails extends AppCompatActivity {
         }catch(ParseException e){
             System.out.println(e.getMessage());
         }
+
         if(menuItem.getItemId() == R.id.saveDetails || menuItem.getItemId() == R.id.saveItem){
             Course course;
             if(courseId == -1){
@@ -237,23 +247,30 @@ public class CourseDetails extends AppCompatActivity {
                 }else{
                     courseId = repository.getmAllCourses().get(repository.getmAllCourses().size() - 1).getCourseId() + 1;
                 }
-                course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
-                        ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
+                if(editNote.getText().toString().isEmpty()){
+                    course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
+                            ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
+                }else{
+                    course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
+                            ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString(), editNote.getText().toString());
+                }
                 repository.insert(course);
                 this.finish();
             }else{
-                course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
-                        ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
+                if(editNote.getText().toString().isEmpty()) {
+                    course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate, selectedTerm.getTermId()
+                            , editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
+                }else{
+                    course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate, selectedTerm.getTermId()
+                            , editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString(),editNote.getText().toString());
+                }
                 repository.update(course);
                 this.finish();
-
             }
-
         }
         if(menuItem.getItemId() == android.R.id.home){
             this.finish();
             return true;
-
         }
         return true;
     }

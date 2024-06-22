@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zybooks.bdavis_wguscheduler.R;
 import com.zybooks.bdavis_wguscheduler.entities.Assessment;
+import com.zybooks.bdavis_wguscheduler.util.TextFormatter;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -42,8 +45,9 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
                     intent.putExtra("id", current.getAssessmentId());
                     intent.putExtra("name", current.getAssessmentName());
                     intent.putExtra("type", current.getAssessmentType());
-                    intent.putExtra("endDate", current.getEndDate());
-                    intent.putExtra("courseId", current.getCourseId());
+                    intent.putExtra("startDate", TextFormatter.simpleDateFormat.format(current.getStartDate()));
+                    intent.putExtra("endDate", TextFormatter.simpleDateFormat.format(current.getEndDate()));
+                    intent.putExtra("associatedCourseId", current.getCourseId());
                     context.startActivity(intent);
 
                 }
