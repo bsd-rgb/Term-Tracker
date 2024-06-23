@@ -1,6 +1,8 @@
 package com.zybooks.bdavis_wguscheduler.UI;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,6 +61,7 @@ public class CourseDetails extends AppCompatActivity {
     String end;
     String note;
     boolean isEmpty;
+    Course currentCourse;
     final Calendar myCalendarStart = Calendar.getInstance();
     final Calendar myCalendarEnd = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener startDate;
@@ -289,6 +292,30 @@ public class CourseDetails extends AppCompatActivity {
                 this.finish();
             }
         }
+
+        if(menuItem.getItemId() == R.id.deleteDetails){
+            for(Course course: repository.getmAllCourses()){
+                if(course.getCourseId() == courseId){
+                    currentCourse = course;
+                }
+            }
+            int numAssessments = 0;
+            for(Assessment assessment: repository.getmAllAssessments()){
+                if(assessment.getCourseId() == courseId){
+                    numAssessments++;
+                }
+            }
+            if(numAssessments == 0){
+                AlertDialog.Builder deleteDialog = createDeleteConfirmationDialog();
+                deleteDialog.show();
+
+            }else{
+                AlertDialog.Builder infoDialog = createInfoDialog();
+                infoDialog.show();
+            }
+
+        }
+
         if(menuItem.getItemId() == android.R.id.home){
             this.finish();
             return true;
@@ -296,4 +323,42 @@ public class CourseDetails extends AppCompatActivity {
         return true;
     }
 
+    private void saveCourse(){
+
+    }
+
+
+
+    private AlertDialog.Builder createDeleteConfirmationDialog() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure you want to delete this course?");
+            builder.setTitle("Confirm Course Deletion");
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i){
+                    repository.delete(currentCourse);
+                    CourseDetails.this.finish();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            return builder;
+        }
+
+        private AlertDialog.Builder createInfoDialog(){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Course cannot be deleted with associated assessments assigned.");
+            builder.setTitle("Warning");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            return builder;
+        }
 }

@@ -1,6 +1,8 @@
 package com.zybooks.bdavis_wguscheduler.UI;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -46,6 +48,7 @@ public class AssessmentDetails extends AppCompatActivity {
     String start;
     String end;
     boolean isEmpty;
+    Assessment currentAssessment;
     final Calendar myCalendarStart = Calendar.getInstance();
     final Calendar myCalendarEnd = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener startDate;
@@ -223,10 +226,42 @@ public class AssessmentDetails extends AppCompatActivity {
                 this.finish();
             }
         }
+
+        if(item.getItemId() == R.id.deleteDetails){
+
+            for(Assessment assessment: repository.getmAllAssessments()){
+                if(assessment.getAssessmentId() == assessmentId){
+                    currentAssessment = assessment;
+                }
+            }
+
+            AlertDialog.Builder deleteDialog = createDeleteConfirmationDialog();
+            deleteDialog.show();
+        }
         if(item.getItemId() == android.R.id.home){
             this.finish();
         }
         return true;
+    }
+
+    private AlertDialog.Builder createDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to delete this assessment?");
+        builder.setTitle("Confirm Assessment Deletion");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i){
+                repository.delete(currentAssessment);
+                AssessmentDetails.this.finish();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        return builder;
     }
 }
 
