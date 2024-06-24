@@ -1,7 +1,10 @@
 package com.zybooks.bdavis_wguscheduler.UI;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -235,6 +239,24 @@ public class CourseDetails extends AppCompatActivity {
         return -1;
     }
 
+    @Override
+    protected void onResume(){
+
+        super.onResume();
+
+        RecyclerView recyclerView = findViewById(R.id.assessmentRecyclerView);
+        final AssessmentAdapter assessmentAdapter = new AssessmentAdapter((this));
+        recyclerView.setAdapter(assessmentAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Assessment> filteredAssessments = new ArrayList<>();
+        for(Assessment assessment: repository.getmAllAssessments()){
+            if(assessment.getAssessmentId() == courseId){
+                filteredAssessments.add(assessment);
+            }
+        }
+        assessmentAdapter.setAssessments(filteredAssessments);
+    }
+
 
 
     @Override
@@ -250,6 +272,74 @@ public class CourseDetails extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem){
 
+        if(menuItem.getItemId() == R.id.saveDetails || menuItem.getItemId() == R.id.saveItem){
+          saveCourse();
+        }
+
+        if(menuItem.getItemId() == R.id.deleteDetails){
+            deleteCourse();
+        }
+
+        if(menuItem.getItemId() == android.R.id.home){
+            this.finish();
+            return true;
+        }
+
+        if(menuItem.getItemId() == R.id.shareNote){
+            Intent sentIntent = new Intent();
+            sentIntent.setAction(Intent.ACTION_SEND);
+            sentIntent.putExtra(Intent.EXTRA_TEXT, "Note Details:\n" + editNote.getText().toString());
+            sentIntent.putExtra(Intent.EXTRA_TITLE, courseName + " Note");
+            sentIntent.setType("text/plain");
+            Intent shareIntent = Intent.createChooser(sentIntent, null);
+            startActivity(shareIntent);
+            return true;
+        }
+
+        if(menuItem.getItemId() == R.id.notify) {
+
+            String startString = editStart.getText().toString();
+            String endString = editEnd.getText().toString();
+            Date startDate = null;
+            Date endDate = null;
+            Date currentDate = new Date();
+
+
+            try {
+                startDate = TextFormatter.simpleDateFormat.parse(startString);
+                endDate = TextFormatter.simpleDateFormat.parse(endString);
+                currentDate = TextFormatter.simpleDateFormat.parse(TextFormatter.simpleDateFormat.format(currentDate));
+            } catch (ParseException e) {
+                System.out.println(e.getMessage());
+            }
+
+            Long startTrigger = startDate.getTime();
+            Long endTrigger = endDate.getTime();
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            if (startDate.equals(currentDate)) {
+                Intent startIntent = new Intent(CourseDetails.this, MyReceiver.class);
+                startIntent.putExtra("message", courseName + " starts today.");
+                PendingIntent startSender = PendingIntent.getBroadcast(CourseDetails.this, ++HomeScreen.numAlert, startIntent, PendingIntent.FLAG_IMMUTABLE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, startTrigger, startSender);
+            }
+
+            if (endDate.equals(currentDate)) {
+                Intent endIntent = new Intent(CourseDetails.this, MyReceiver.class);
+                endIntent.putExtra("message", courseName + " ends today.");
+                PendingIntent endSender = PendingIntent.getBroadcast(CourseDetails.this, ++HomeScreen.numAlert, endIntent, PendingIntent.FLAG_IMMUTABLE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, endTrigger, endSender);
+            }
+
+            Toast.makeText(CourseDetails.this, "The date notification is set.", Toast.LENGTH_LONG).show();
+        }
+
+        return true;
+    }
+
+    private void saveCourse(){
+
         String startString = editStart.getText().toString();
         String endString = editEnd.getText().toString();
         Term selectedTerm = (Term)termSpinner.getSelectedItem();
@@ -263,71 +353,57 @@ public class CourseDetails extends AppCompatActivity {
             System.out.println(e.getMessage());
         }
 
-        if(menuItem.getItemId() == R.id.saveDetails || menuItem.getItemId() == R.id.saveItem){
-            Course course;
-            if(courseId == -1){
-                if(repository.getmAllCourses().size() == 0){
-                    courseId = 1;
-                }else{
-                    courseId = repository.getmAllCourses().get(repository.getmAllCourses().size() - 1).getCourseId() + 1;
-                }
-                if(editNote.getText().toString().isEmpty()){
-                    course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
-                            ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
-                }else{
-                    course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
-                            ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString(), editNote.getText().toString());
-                }
-                repository.insert(course);
-                this.finish();
+        Course course;
+        if(courseId == -1){
+            if(repository.getmAllCourses().size() == 0){
+                courseId = 1;
             }else{
-                if(editNote.getText().toString().isEmpty()) {
-                    course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate, selectedTerm.getTermId()
-                            , editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
-                }else{
-                    course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate, selectedTerm.getTermId()
-                            , editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString(),editNote.getText().toString());
-                }
-                repository.update(course);
-                this.finish();
+                courseId = repository.getmAllCourses().get(repository.getmAllCourses().size() - 1).getCourseId() + 1;
             }
-        }
-
-        if(menuItem.getItemId() == R.id.deleteDetails){
-            for(Course course: repository.getmAllCourses()){
-                if(course.getCourseId() == courseId){
-                    currentCourse = course;
-                }
-            }
-            int numAssessments = 0;
-            for(Assessment assessment: repository.getmAllAssessments()){
-                if(assessment.getCourseId() == courseId){
-                    numAssessments++;
-                }
-            }
-            if(numAssessments == 0){
-                AlertDialog.Builder deleteDialog = createDeleteConfirmationDialog();
-                deleteDialog.show();
-
+            if(editNote.getText().toString().isEmpty()){
+                course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
+                        ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
             }else{
-                AlertDialog.Builder infoDialog = createInfoDialog();
-                infoDialog.show();
+                course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate,selectedTerm.getTermId()
+                        ,editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString(), editNote.getText().toString());
             }
-
-        }
-
-        if(menuItem.getItemId() == android.R.id.home){
+            repository.insert(course);
             this.finish();
-            return true;
+        }else{
+            if(editNote.getText().toString().isEmpty()) {
+                course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate, selectedTerm.getTermId()
+                        , editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString());
+            }else{
+                course = new Course(courseId, editName.getText().toString(), statusSpinner.getSelectedItem().toString(), startDate, endDate, selectedTerm.getTermId()
+                        , editInstructorName.getText().toString(), editInstructorEmail.getText().toString(), editInstructorPhone.getText().toString(),editNote.getText().toString());
+            }
+            repository.update(course);
+            CourseDetails.this.finish();
         }
-        return true;
-    }
-
-    private void saveCourse(){
 
     }
 
+    private void deleteCourse(){
+        for(Course course: repository.getmAllCourses()){
+            if(course.getCourseId() == courseId){
+                currentCourse = course;
+            }
+        }
+        int numAssessments = 0;
+        for(Assessment assessment: repository.getmAllAssessments()){
+            if(assessment.getCourseId() == courseId){
+                numAssessments++;
+            }
+        }
+        if(numAssessments == 0){
+            AlertDialog.Builder deleteDialog = createDeleteConfirmationDialog();
+            deleteDialog.show();
 
+        }else{
+            AlertDialog.Builder infoDialog = createInfoDialog();
+            infoDialog.show();
+        }
+    }
 
     private AlertDialog.Builder createDeleteConfirmationDialog() {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

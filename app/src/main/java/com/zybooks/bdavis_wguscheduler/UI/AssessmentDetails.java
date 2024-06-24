@@ -1,8 +1,12 @@
 package com.zybooks.bdavis_wguscheduler.UI;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -201,10 +206,12 @@ public class AssessmentDetails extends AppCompatActivity {
         String endString = editEnd.getText().toString();
         Date startDate = null;
         Date endDate = null;
+        Date currentDate = new Date();
 
         try{
             startDate = TextFormatter.simpleDateFormat.parse(startString);
             endDate = TextFormatter.simpleDateFormat.parse(endString);
+            currentDate = TextFormatter.simpleDateFormat.parse(TextFormatter.simpleDateFormat.format(currentDate));
         }catch(ParseException e){
             System.out.println(e.getMessage());
         }
@@ -217,11 +224,11 @@ public class AssessmentDetails extends AppCompatActivity {
                 }else{
                     assessmentId = repository.getmAllAssessments().get(repository.getmAllAssessments().size() - 1).getAssessmentId() + 1;
                 }
-                assessment = new Assessment(assessmentId, editName.getText().toString(), assessmentTypeSpinner.getSelectedItem().toString(), startDate, endDate, selectedCourse.getCourseId());
+                assessment = new Assessment(assessmentId, editName.getText().toString(), assessmentTypeSpinner.getSelectedItem().toString(), endDate, startDate, selectedCourse.getCourseId());
                 repository.insert(assessment);
                 this.finish();
             }else{
-                assessment = new Assessment(assessmentId, editName.getText().toString(), assessmentTypeSpinner.getSelectedItem().toString(), startDate, endDate, selectedCourse.getCourseId());
+                assessment = new Assessment(assessmentId, editName.getText().toString(), assessmentTypeSpinner.getSelectedItem().toString(), endDate, startDate, selectedCourse.getCourseId());
                 repository.update(assessment);
                 this.finish();
             }
@@ -238,9 +245,36 @@ public class AssessmentDetails extends AppCompatActivity {
             AlertDialog.Builder deleteDialog = createDeleteConfirmationDialog();
             deleteDialog.show();
         }
+
+        if(item.getItemId() == R.id.notify){
+
+            Long startTrigger = startDate.getTime();
+            Long endTrigger = endDate.getTime();
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            if (startDate.equals(currentDate)) {
+                Intent startIntent = new Intent(AssessmentDetails.this, MyReceiver.class);
+                startIntent.putExtra("message", assessmentName + " starts today.");
+                PendingIntent startSender = PendingIntent.getBroadcast(AssessmentDetails.this, ++HomeScreen.numAlert, startIntent, PendingIntent.FLAG_IMMUTABLE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, startTrigger, startSender);
+            }
+
+            if (endDate.equals(currentDate)) {
+                Intent endIntent = new Intent(AssessmentDetails.this, MyReceiver.class);
+                endIntent.putExtra("message", assessmentName + " ends today.");
+                PendingIntent endSender = PendingIntent.getBroadcast(AssessmentDetails.this, ++HomeScreen.numAlert, endIntent, PendingIntent.FLAG_IMMUTABLE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, endTrigger, endSender);
+            }
+
+            Toast.makeText(AssessmentDetails.this, "The date notification is set.", Toast.LENGTH_LONG).show();
+
+        }
         if(item.getItemId() == android.R.id.home){
             this.finish();
         }
+
+
         return true;
     }
 

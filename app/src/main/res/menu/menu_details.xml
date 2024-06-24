@@ -13,4 +13,8 @@
         android:title="Share Note"
         android:id="@+id/shareNote" />
 
+    <item
+        android:title="Date Notification"
+        android:id="@+id/notify" />
+
 </menu>

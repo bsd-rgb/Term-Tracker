@@ -5,10 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.AssessmentList">
+    tools:context=".UI.TermList">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonAssessment"
+        android:id="@+id/floatingActionButtonTerm"
         android:layout_width="127dp"
         android:layout_height="81dp"
         android:layout_marginEnd="32dp"
@@ -18,11 +18,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_menu_add" />
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/assessmentListReyclerview"
+        android:id="@+id/termListReyclerview"
         android:layout_width="409dp"
         android:layout_height="641dp"
         android:layout_marginStart="10dp"
@@ -30,6 +31,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-</ScrollView>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

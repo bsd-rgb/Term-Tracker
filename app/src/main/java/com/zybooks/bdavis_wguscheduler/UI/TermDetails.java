@@ -165,6 +165,24 @@ public class TermDetails extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume(){
+        super.onResume();
+
+        RecyclerView recyclerView = findViewById(R.id.courseRecyclerView);
+        final CourseAdapter courseAdapter = new CourseAdapter((this));
+        recyclerView.setAdapter(courseAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Course> filteredCourses = new ArrayList<>();
+        for(Course course: repository.getmAllCourses()){
+            if(course.getTermId() == termId){
+                filteredCourses.add(course);
+            }
+        }
+        courseAdapter.setCourses(filteredCourses);
+    }
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu){
 
         if(isEmpty){
@@ -172,6 +190,8 @@ public class TermDetails extends AppCompatActivity {
         }else {
             getMenuInflater().inflate(R.menu.menu_details, menu);
             MenuItem shareItem = menu.findItem(R.id.shareNote);
+            MenuItem notifyItem = menu.findItem(R.id.notify);
+            notifyItem.setVisible(false);
             shareItem.setVisible(false);
         }
         return true;
@@ -267,7 +287,7 @@ public class TermDetails extends AppCompatActivity {
     private AlertDialog.Builder createInfoDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Term cannot be deleted with associated courses assigned.");
-        builder.setTitle("Warning");
+        builder.setTitle("Error");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

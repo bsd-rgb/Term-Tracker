@@ -24,6 +24,8 @@ import java.util.Date;
 
 public class HomeScreen extends AppCompatActivity {
 
+    public static int numAlert;
+
     private Repository repository;
 
     @Override
