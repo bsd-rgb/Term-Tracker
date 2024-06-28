@@ -201,8 +201,9 @@ public class CourseDetails extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Assessment> filteredAssessments = new ArrayList<>();
         for(Assessment assessment: repository.getmAllAssessments()){
-            if(assessment.getAssessmentId() == courseId){
+            if(assessment.getCourseId() == courseId){
                 filteredAssessments.add(assessment);
+                Log.d("CourseDetails", "Added course assessments: "+ assessment.getAssessmentId());
             }
         }
         assessmentAdapter.setAssessments(filteredAssessments);
@@ -250,11 +251,13 @@ public class CourseDetails extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Assessment> filteredAssessments = new ArrayList<>();
         for(Assessment assessment: repository.getmAllAssessments()){
-            if(assessment.getAssessmentId() == courseId){
+            if(assessment.getCourseId() == courseId){
                 filteredAssessments.add(assessment);
             }
         }
         assessmentAdapter.setAssessments(filteredAssessments);
+
+
     }
 
 

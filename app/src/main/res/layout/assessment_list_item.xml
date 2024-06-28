@@ -9,11 +9,9 @@
         android:id="@+id/assessmentListItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
         android:text="TextView"
+        android:padding="10dp"
         android:textSize="25sp"
-        android:paddingBottom="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

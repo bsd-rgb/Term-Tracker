@@ -82,6 +82,7 @@ public class AssessmentDetails extends AppCompatActivity {
         assessmentName = getIntent().getStringExtra("name");
         assessmentType = getIntent().getStringExtra("type");
         associatedCourseId = getIntent().getIntExtra("associatedCourseId", -1);
+        Log.d("AssessmentDetails", "Associated Course ID: " + associatedCourseId);
         assessmentCourseId = getIntent().getIntExtra("associatedCourseIdFromCourse", -1);
         Log.d("AssessmentDetails", "Assessment Course ID: " + assessmentCourseId);
         start = getIntent().getStringExtra("startDate");
@@ -95,18 +96,24 @@ public class AssessmentDetails extends AppCompatActivity {
         ArrayList<Course> courseArrayList = new ArrayList<Course>();
         for(Course course: repository.getmAllCourses()){
             courseArrayList.add(course);
+            Log.d("AssessmentDetails", "Course added to spinner: " + course.getCourseId());
         }
 
         ArrayAdapter<Course> courseArrayAdapter = new ArrayAdapter<Course>(this, android.R.layout.simple_spinner_item, courseArrayList);
         courseSpinner.setAdapter(courseArrayAdapter);
 
-        if(assessmentId != -1){
-            int position = getTermPositionById(courseArrayList, assessmentId);
+        Log.d("AssessmentDetails", "Associated Course ID: " + assessmentId);
+        Log.d("AssessmentDetails", "Assessment Course ID: " + assessmentCourseId);
+
+        if(associatedCourseId != -1){
+            int position = getCoursePositionById(courseArrayList, associatedCourseId);
+            Log.d("AssessmentDetails", "Position for assessmentId " + associatedCourseId + ": " + position);
             if(position >= 0){
                 courseSpinner.setSelection(position);
             }
         }else if(assessmentCourseId != -1){
-            int assessmentCourseIdPosition = getTermPositionById(courseArrayList, assessmentCourseId);
+            int assessmentCourseIdPosition = getCoursePositionById(courseArrayList, assessmentCourseId);
+            Log.d("AssessmentDetails", "Position for assessmentCourseId " + assessmentCourseId + ": " + assessmentCourseIdPosition);
             if(assessmentCourseIdPosition > 0){
                 courseSpinner.setSelection(assessmentCourseIdPosition);
             }
@@ -175,9 +182,9 @@ public class AssessmentDetails extends AppCompatActivity {
         }
     }
 
-    private int getTermPositionById(ArrayList<Course> courseList, int associatedCourseId) {
-        for (int i = 0; i < courseList.size(); i++) {
-            if (courseList.get(i).getCourseId() == associatedCourseId) {
+    private int getCoursePositionById(ArrayList<Course> courseArrayList, int associatedCourseId) {
+        for (int i = 0; i < courseArrayList.size(); i++) {
+            if (courseArrayList.get(i).getCourseId() == associatedCourseId) {
                 return i;
             }
         }
@@ -202,6 +209,7 @@ public class AssessmentDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
 
         Course selectedCourse = (Course) courseSpinner.getSelectedItem();
+        Log.d("AssessmentDetails", "Selected course name " + selectedCourse.getCourseName());
         String startString = editStart.getText().toString();
         String endString = editEnd.getText().toString();
         Date startDate = null;
@@ -225,11 +233,14 @@ public class AssessmentDetails extends AppCompatActivity {
                     assessmentId = repository.getmAllAssessments().get(repository.getmAllAssessments().size() - 1).getAssessmentId() + 1;
                 }
                 assessment = new Assessment(assessmentId, editName.getText().toString(), assessmentTypeSpinner.getSelectedItem().toString(), endDate, startDate, selectedCourse.getCourseId());
+                Log.d("AssessmentDetails", "Saved course Name: " + selectedCourse.getCourseName());
                 repository.insert(assessment);
                 this.finish();
             }else{
                 assessment = new Assessment(assessmentId, editName.getText().toString(), assessmentTypeSpinner.getSelectedItem().toString(), endDate, startDate, selectedCourse.getCourseId());
+                Log.d("AssessmentDetails", "Updated course Name: " + selectedCourse.getCourseName());
                 repository.update(assessment);
+
                 this.finish();
             }
         }

@@ -3,6 +3,7 @@ package com.zybooks.bdavis_wguscheduler.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,8 +68,10 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
             Assessment current = mAssessments.get(position);
             String name = current.getAssessmentName();
             holder.assessmentItemViewer.setText(name);
+            Log.d("AssessmentAdapter", "Binding assessment at position " + position + ": " + name);
         }else {
             holder.assessmentItemViewer.setText("No assessment(s).");
+            Log.e("AssessmentAdapter", "mAssessments is null or position is out of bounds");
         }
 
     }
