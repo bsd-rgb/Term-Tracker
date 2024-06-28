@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="25dp"
+    tools:context=".UI.CourseDetails">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Course Name: "
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/courseNameEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Course Name" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Course Start: "
+                    android:textSize="20sp"
+                    tools:layout_editor_absoluteX="-11dp"
+                    tools:layout_editor_absoluteY="81dp" />
+
+                <EditText
+                    android:id="@+id/courseStartEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="Course Start"
+                    android:inputType="date" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Course End: "
+                    android:textSize="20sp"
+                    tools:layout_editor_absoluteX="-12dp"
+                    tools:layout_editor_absoluteY="131dp" />
+
+                <EditText
+                    android:id="@+id/courseEndEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="Course End"
+                    android:inputType="date" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="Instructor Name : "
+                    android:textSize="20sp"
+                    tools:layout_editor_absoluteX="-12dp"
+                    tools:layout_editor_absoluteY="193dp" />
+
+                <EditText
+                    android:id="@+id/courseInstructorNameEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Instructor Name" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="Instructor Email : "
+                    android:textSize="20sp"
+                    tools:layout_editor_absoluteX="-19dp"
+                    tools:layout_editor_absoluteY="255dp" />
+
+                <EditText
+                    android:id="@+id/courseInstructorEmailEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Instructor Email" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="Instructor Phone : "
+                    android:textSize="20sp"
+                    tools:layout_editor_absoluteX="-20dp"
+                    tools:layout_editor_absoluteY="307dp" />
+
+                <EditText
+                    android:id="@+id/courseInstructorPhoneEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Instructor Phone"
+                    android:inputType="number" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Note (Optional)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="-15dp"
+                tools:layout_editor_absoluteY="353dp" />
+
+            <EditText
+                android:id="@+id/courseNoteEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Note" />
+
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Course Status"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="-19dp"
+                tools:layout_editor_absoluteY="393dp" />
+
+            <Spinner
+                android:id="@+id/spCourseStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/courseStatusChoices"
+                tools:layout_editor_absoluteX="-11dp"
+                tools:layout_editor_absoluteY="430dp" />
+
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Associated Term"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="133dp"
+                tools:layout_editor_absoluteY="431dp" />
+
+            <Spinner
+                android:id="@+id/spTerms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="268dp"
+                tools:layout_editor_absoluteY="402dp" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Associated Assessments"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addAssessmentFAB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:clickable="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView"
+                app:srcCompat="@android:drawable/ic_input_add" />
+
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/assessmentRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:nestedScrollingEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addAssessmentFAB"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+             />
+        <!--tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="221dp"-->
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
